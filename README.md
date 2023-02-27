@@ -1,6 +1,6 @@
 # Expense-Tracker
-I develop backend of this Project using Node.js and Express.js framework.
-and develop UI using react.js and bootstrap.
+I Have develop this Project using Node.js and Express.js framework.
+and for UI I have used react.js and bootstrap.
 
 Done with the following :
 i)done with the basic backend API 
