@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import bodyparser from 'body-parser'
 import { UserService } from './services/UserService';
 import cors from 'cors';
-import { User } from './entities/UserEntity';
+import { User } from './entities/UserType';
 
 dotenv.config();
 
@@ -61,7 +61,7 @@ app.get('/user/:userId/expenses', (req: Request, res: Response) => {
 
 });
 
-app.post('/user/login', (req: Request, res: Response, next) => {
+app.post('/user/login', (req: Request, res: Response) => {
   console.log(" user login api start")
   let responseMsg = "Error Occured!"
   res.statusCode = 400

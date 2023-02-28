@@ -1,5 +1,6 @@
-import { Expense } from "../entities/ExpenseEntity";
-import { User } from "../entities/UserEntity";
+import { Expense } from "../entities/ExpenseType";
+import { User } from "../entities/UserType";
+import { v4 as uuidv4 } from 'uuid';
 
 export class UserService {
     private users: User[]
@@ -18,7 +19,7 @@ export class UserService {
             throw Error("Id is mandatory!")
         }
 
-        let userobj = this.getUserById(parseInt(id))
+        let userobj = this.getUserById(id)
 
         if (!userobj) {
             throw Error("Invalid ID!")
@@ -36,7 +37,7 @@ export class UserService {
         if (!password) {
             throw Error('Password is must!')
         }
-        
+
         const user = this.getUserByEmailId(emailId)
 
         if (!user) {
@@ -80,7 +81,14 @@ export class UserService {
 
         validatePassword(body.password)
 
-        user = new User(this.userId++, body.firstName, body.lastName, body.emailId, body.password)
+        user = {
+            id: uuidv4(),
+            firstName: body.firstName,
+            lastName: body.lastName,
+            emailId: body.emailId,
+            password: body.password,
+            expenses: []
+        }
         this.users.push(user)
         return user;
     }
@@ -109,8 +117,12 @@ export class UserService {
         //     throw Error("date cannot be empty")
         // }
 
-
-        let expobj = new Expense(body.reason, body.cost, body.date)
+        let expobj: Expense = {
+            id: uuidv4(),
+            reason: body.reason,
+            cost: body.cost,
+            date: body.date
+        }
         let userExp = this.getUserExpenses(id)
         userExp.push(expobj)
         return expobj;
@@ -131,18 +143,18 @@ export class UserService {
             if (body.reason == "") {
                 throw new Error("Reason cannot be empty!")
             }
-            expObj.editReason(body.reason)
+            expObj.reason = body.reason
         }
 
         if (body.cost) {
             if (body.cost <= 0) {
                 throw new Error("Cost cannot be 0 less than 0!")
             }
-            expObj.editCost(body.cost)
+            expObj.cost = body.cost
         }
 
         if (body.date) {
-            expObj.editDate(body.date)
+            expObj.date = body.date
         }
 
         return expObj;
@@ -167,7 +179,7 @@ export class UserService {
         if (!id) {
             throw Error("ID is mandatory!!")
         }
-        let expobj = this.getUserById(parseInt(id))
+        let expobj = this.getUserById(id)
         if (!expobj) {
             throw Error("Invalid ID!")
         }
@@ -182,7 +194,7 @@ export class UserService {
         if (id == undefined) {
             throw Error("ID is mandatory!!")
         }
-        let userObj = this.getUserById(parseInt(id))
+        let userObj = this.getUserById(id)
         if (!userObj) {
             throw Error("Invalid ID!")
         }
@@ -202,7 +214,7 @@ export class UserService {
      * Return user object for given id else return undefined.
      * @param id Id of user.
      */
-    private getUserById(id: number): User | undefined {
+    private getUserById(id: string): User | undefined {
         return this.users.find(user => user.id === id)
     }
 }
